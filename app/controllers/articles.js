@@ -17,6 +17,7 @@ exports.article = function(req, res, next, id) {
         if(!article) {
             return next(new Error('Failed to load article ' + id));
         } else {
+            console.log(article);
             req.article = article;
             return next();            
         }
@@ -99,6 +100,7 @@ exports.show = function(req, res) {
  */
 exports.all = function(req, res) {
     db.Article.findAll({include: [{model:db.User, attributes: ['id', 'username', 'name']}]}).then(function(articles){
+        console.log(articles);
         return res.jsonp(articles);
     }).catch(function(err){
         return res.render('error', {

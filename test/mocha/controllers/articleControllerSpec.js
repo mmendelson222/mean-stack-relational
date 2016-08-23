@@ -132,7 +132,7 @@ describe('Articles Controller', function () {
                     content: 'this is updated test content to test functionality of Create Article'
                 }
 
-            }
+            };
 
 
         });
@@ -194,7 +194,7 @@ describe('Articles Controller', function () {
                         return Promise.resolve();
                     }
                 }
-            }
+            };
         });
 
         it('should return destroyed article on successful destroy', function (done) {
@@ -313,7 +313,7 @@ describe('Articles Controller', function () {
                     id: 2
                 }
 
-            },
+            };
             res.send = function (httpStatus, msg) {
 
 
