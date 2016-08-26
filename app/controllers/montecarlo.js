@@ -5,7 +5,8 @@
  * Module dependencies.
  */
 'use strict';
-var StandardError = require('standard-error');
+var StandardError = require('standard-error'),
+    exec = require('child_process').exec;
 
 //add s3 inf here.
 
@@ -60,6 +61,20 @@ exports.show = function (req, res) {
     // Sending down the article that was just preloaded by the articles.article function
     // and saves article on the req object.
     return res.jsonp(config);
+};
+
+var scriptPath = "test/reverse.sh ";
+exports.runlocal = function (req, res){
+    exec(scriptPath + "blah",
+        function (error, stdout, stderr) {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+            return res.jsonp(stdout);
+        });
+    return 'ok';
 };
 
 /**

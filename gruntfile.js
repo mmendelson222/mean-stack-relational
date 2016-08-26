@@ -32,7 +32,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            all:['gruntfile.js', 'public/js/**/*.js', 'test/mocha/**/*.js', 'test/karma/**/*.js', 'app/**/*.js'],
+            all:['gruntfile.js', 'test/mocha/**/*.js', 'test/karma/**/*.js', 'app/**/*.js'],
             options: {
                 jshintrc: '.jshintrc',
                 reporter: require('jshint-stylish')

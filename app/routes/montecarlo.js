@@ -6,6 +6,7 @@
 /**
  * Module dependencies.
  */
+
 var users = require('../../app/controllers/users'),
     simulation = require('../../app/controllers/montecarlo');
 
@@ -15,6 +16,8 @@ module.exports = function(app) {
     app.route('/montecarlo')
         .get(simulation.show);
         //.post(users.requiresLogin, simulation.create);
+    app.route('/run')
+        .get(simulation.runlocal);
     app.route('/montecarlo/:simID')
         .get(simulation.show);
         //.put(users.requiresLogin, articles.hasAuthorization, articles.update)
