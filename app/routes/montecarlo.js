@@ -12,7 +12,10 @@ var users = require('../../app/controllers/users'),
 
 module.exports = function(app) {
     console.log("montecarlo route");
-// Article Routes
+// demo Routes
+    app.route('/demo')  //corresponds with resource?
+        .post(simulation.runlocal);
+    //.post(users.requiresLogin, simulation.create);
     app.route('/montecarlo')
         .get(simulation.show);
         //.post(users.requiresLogin, simulation.create);

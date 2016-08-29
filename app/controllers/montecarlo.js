@@ -65,14 +65,22 @@ exports.show = function (req, res) {
 
 var scriptPath = "test/reverse.sh ";
 exports.runlocal = function (req, res){
-    exec(scriptPath + "blah",
+    console.log("executing run local");
+    exec(scriptPath + req.body.content,
+    //exec("ls",
         function (error, stdout, stderr) {
-            console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
+            if (stdout) {
+                console.log('stdout: ' + stdout);
+                return  res.jsonp(JSON.parse(stdout)); //output is expected to be json
+            }
+            if (stderr) {
+                console.log('stderr: ' + stderr);
+            }
             if (error !== null) {
                 console.log('exec error: ' + error);
             }
-            return res.jsonp(stdout);
+            var errjson = '{ "error": ' +JSON.stringify(error)+'}';
+            return res.jsonp(JSON.parse(errjson)) ;
         });
     return 'ok';
 };
