@@ -40,6 +40,12 @@ angular.module('mean').config(['$stateProvider','$urlRouterProvider', function($
             controller : 'ArticlesController',
             templateUrl: 'views/articles/view.html'
         })
+        //result is displayed in the same view.
+        .state('runDemo',{
+            url : '/demo',
+            controller : 'DemoController',
+            templateUrl: 'views/demo/run.html'
+        })
         .state('404',{
             templateUrl: 'views/404.html'
         })
