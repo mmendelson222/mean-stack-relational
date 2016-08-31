@@ -2,12 +2,19 @@ angular.module('mean.demo')
     .controller('MontecarloController', ['$scope', '$stateParams', 'Global', 'Montecarlo', '$state', function ($scope, $stateParams, Global, Montecarlo, $state) {
     $scope.global = Global;
         console.log("init montecarlo");
-        $scope.content = "something.something";
+        $scope.inputs = {
+            script: "runbook_svc.sh",
+            bucket: "fanniehpcpoc",
+            configkey: "nick/benchmark_40.cfg"
+        };
 
     $scope.save = function() {
         console.log("running montecarlo ");
+        $scope.reqTime = new Date();
         var demo = new Montecarlo({
-            content: this.content
+            script: this.inputs.script,
+            bucket: this.inputs.bucket,
+            configkey: this.inputs.configkey
         });
 
         demo.$save(function(response) {
@@ -19,10 +26,7 @@ angular.module('mean.demo')
                 console.log(response);
                 $scope.result = response;
             }
-
         });
-
-        this.content = "";
     };
 
 

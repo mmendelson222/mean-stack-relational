@@ -1,9 +1,19 @@
 <section>
 	<form class="form-horizontal" data-ng-submit="save()">
 		<div class="control-group">
-			<label class="control-label" for="content">Title</label>
+			<label class="control-label" for="script">Script name</label>
 			<div class="controls">
-				<input type="text" data-ng-model="content" id="content" placeholder="Content" required>
+				<input type="text" data-ng-model="inputs.script" id="script" required>
+			</div>
+
+			<label class="control-label" for="bucket">Bucket name</label>
+			<div class="controls">
+				<input type="text" data-ng-model="inputs.bucket" id="bucket">
+			</div>
+
+			<label class="control-label" for="configkey">Config file key</label>
+			<div class="controls">
+				<input type="text" data-ng-model="inputs.configkey" id="configkey">
 			</div>
 		</div>
 		<div class="control-group">
@@ -13,6 +23,7 @@
 		</div>
 	</form>
 
-	<div id="result">{{result | json}}</div>
+	<div ng-if="reqTime">Submitting request at: {{reqTime | date:'medium'}}</div>
+	<pre ng-if="result">{{result | json}}</pre>
 
 </section>

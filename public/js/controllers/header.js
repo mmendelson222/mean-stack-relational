@@ -1,6 +1,11 @@
 angular.module('mean.system').controller('HeaderController', ['$scope', 'Global', 'SignOut', '$state', function ($scope, Global, SignOut, $state) {
     $scope.global = Global;
 
+    $scope.demomenu = [{
+        "title": "Run the model",
+        "state": "runMontecarlo"
+    }];
+
     //not sure why I'm finding this in two places.  (also auth.js)
     //perhaps header.js is not used on some pages.
     $scope.menu = [{

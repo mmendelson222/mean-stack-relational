@@ -82,10 +82,24 @@ exports.runlocal = function (req, res){
     return 'ok';
 };
 
-var simScriptPath = "/home/ec2-user/bin/runbook_svc.sh ";
 exports.runsimulation = function (req, res){
     //multiple parameters may be included in content field.
-    exec(simScriptPath + req.body.content,
+    var error = "";
+    if (!req.body.script) {
+         error += "Script name not provided.";
+    }
+    if (!req.body.bucket) {
+        error += "Bucket name not provided.";
+    }
+    if (!req.body.configkey) {
+        error += "Configuration Key not provided.";
+    }
+    if (error) {
+        return res.jsonp({"error": error}) ;
+    }
+
+    var scriptName = "/home/ec2-user/bin/" + req.body.script + " " + req.body.bucket + " " + req.body.configkey;
+    exec(scriptName,
         function (error, stdout, stderr) {
             var sjson;
             if (stdout) {
