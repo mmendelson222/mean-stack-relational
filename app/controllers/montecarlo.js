@@ -46,7 +46,7 @@ exports.destroy = function (req, res) {
  * Load (or show) a simulation
  */
 exports.show = function (req, res) {
-    console.log("montecarlo show");
+    console.log("show some json output");
 
     var config = {
         AppID: "gago",
@@ -57,17 +57,14 @@ exports.show = function (req, res) {
         EconomyEnvironmentFilename: "yet another path"
     };
 
-
-    // Sending down the article that was just preloaded by the articles.article function
-    // and saves article on the req object.
     return res.jsonp(config);
 };
 
-var scriptPath = "test/reverse.sh ";
+var demoScriptPath = "test/reverse.sh ";
 exports.runlocal = function (req, res){
-    console.log("executing run local");
-    exec(scriptPath + req.body.content,
-    //exec("ls",
+    console.log("executing " + demoScriptPath);
+    //enclose in quotes - single parameter expected.
+    exec(demoScriptPath + "\"" + req.body.content +  "\"",
         function (error, stdout, stderr) {
             if (stdout) {
                 console.log('stdout: ' + stdout);
@@ -81,6 +78,29 @@ exports.runlocal = function (req, res){
             }
             var errjson = '{ "error": ' +JSON.stringify(error)+'}';
             return res.jsonp(JSON.parse(errjson)) ;
+        });
+    return 'ok';
+};
+
+var simScriptPath = "/home/ec2-user/bin/runbook_svc.sh ";
+exports.runsimulation = function (req, res){
+    //multiple parameters may be included in content field.
+    exec(simScriptPath + req.body.content,
+        function (error, stdout, stderr) {
+            var sjson;
+            if (stdout) {
+                console.log('stdout: ' + stdout);
+                sjson = '{ "stdout": ' +JSON.stringify(stdout)+'}';
+            }
+            if (stderr) {
+                console.log('stderr: ' + stderr);
+                sjson = '{ "stderr": ' +JSON.stringify(stderr)+'}';
+            }
+            if (error !== null) {
+                console.log('exec error: ' + error);
+                sjson = '{ "error_exec": ' + JSON.stringify(error) + '}';
+            }
+            return res.jsonp(JSON.parse(sjson)) ;
         });
     return 'ok';
 };

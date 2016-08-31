@@ -8,21 +8,21 @@
  */
 
 var users = require('../../app/controllers/users'),
-    simulation = require('../../app/controllers/montecarlo');
+    montecarlo = require('../../app/controllers/montecarlo');
 
 module.exports = function(app) {
-    console.log("montecarlo route");
 // demo Routes
     app.route('/demo')  //corresponds with resource?
-        .post(simulation.runlocal);
-    //.post(users.requiresLogin, simulation.create);
+        .post(montecarlo.runlocal);
+
     app.route('/montecarlo')
-        .get(simulation.show);
-        //.post(users.requiresLogin, simulation.create);
+        .post(montecarlo.runsimulation);
+
     app.route('/run')
-        .get(simulation.runlocal);
+        .get(montecarlo.runlocal);
+
     app.route('/montecarlo/:simID')
-        .get(simulation.show);
+        .get(montecarlo.show);
         //.put(users.requiresLogin, articles.hasAuthorization, articles.update)
         //.delete(users.requiresLogin, articles.hasAuthorization, articles.destroy);
 
