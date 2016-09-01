@@ -3,7 +3,7 @@ angular.module('mean.demo')
     $scope.global = Global;
         console.log("init montecarlo");
         $scope.inputs = {
-            script: "runbook_svc.sh",
+            script: "service-run.sh",
             bucket: "fanniehpcpoc",
             configkey: "nick/benchmark_40.cfg"
         };

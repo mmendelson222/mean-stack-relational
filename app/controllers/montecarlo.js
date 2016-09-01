@@ -100,7 +100,7 @@ exports.runsimulationAsync = function (req, res) {
         return res.jsonp({"error": error});
     }
 
-    var scriptPath = "home/ec2-user/bin/" + req.body.script;
+    var scriptPath = "/home/ec2-user/bin/" + req.body.script;
 
     //invoke asynchronously
     const sp = spawn(scriptPath, [req.body.bucket, req.body.configkey]);
