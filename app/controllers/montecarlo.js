@@ -117,7 +117,7 @@ exports.runsimulationAsync = function (req, res) {
     setTimeout(function() {
         //successful invocation
         if (!errorData) {
-            return res.jsonp({"error": "Invoked " + scriptPath});
+            return res.jsonp({"message": "Invoked " + scriptPath});
         }
     }, 500);
 };
