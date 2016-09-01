@@ -6,7 +6,8 @@
  */
 'use strict';
 var StandardError = require('standard-error'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    spawn = require('child_process').spawn;
 
 //add s3 inf here.
 
@@ -61,14 +62,14 @@ exports.show = function (req, res) {
 };
 
 var demoScriptPath = "test/reverse.sh ";
-exports.runlocal = function (req, res){
+exports.runlocal = function (req, res) {
     console.log("executing " + demoScriptPath);
     //enclose in quotes - single parameter expected.
-    exec(demoScriptPath + "\"" + req.body.content +  "\"",
+    exec(demoScriptPath + "\"" + req.body.content + "\"",
         function (error, stdout, stderr) {
             if (stdout) {
                 console.log('stdout: ' + stdout);
-                return  res.jsonp(JSON.parse(stdout)); //output is expected to be json
+                return res.jsonp(JSON.parse(stdout)); //output is expected to be json
             }
             if (stderr) {
                 console.log('stderr: ' + stderr);
@@ -76,17 +77,18 @@ exports.runlocal = function (req, res){
             if (error !== null) {
                 console.log('exec error: ' + error);
             }
-            var errjson = '{ "error": ' +JSON.stringify(error)+'}';
-            return res.jsonp(JSON.parse(errjson)) ;
+            var errjson = '{ "error": ' + JSON.stringify(error) + '}';
+            return res.jsonp(JSON.parse(errjson));
         });
     return 'ok';
 };
 
-exports.runsimulation = function (req, res){
+
+exports.runsimulationAsync = function (req, res) {
     //multiple parameters may be included in content field.
     var error = "";
     if (!req.body.script) {
-         error += "Script name not provided.";
+        error += "Script name not provided.";
     }
     if (!req.body.bucket) {
         error += "Bucket name not provided.";
@@ -95,7 +97,45 @@ exports.runsimulation = function (req, res){
         error += "Configuration Key not provided.";
     }
     if (error) {
-        return res.jsonp({"error": error}) ;
+        return res.jsonp({"error": error});
+    }
+
+    var scriptPath = "home/ec2-user/bin/" + req.body.script;
+
+    //invoke asynchronously
+    const sp = spawn(scriptPath, [req.body.bucket, req.body.configkey]);
+    var errorData = null;
+
+    //if error thrown return details of spawn
+    sp.on('error', function (data) {
+        errorData = data;
+        console.log(data);
+        return res.jsonp({"error": errorData});
+    });
+
+    //if error not thrown with 500 ms, assume successful invocation.
+    setTimeout(function() {
+        //successful invocation
+        if (!errorData) {
+            return res.jsonp({"error": "Invoked " + scriptPath});
+        }
+    }, 500);
+};
+
+exports.runsimulationSync = function (req, res) {
+    //multiple parameters may be included in content field.
+    var error = "";
+    if (!req.body.script) {
+        error += "Script name not provided.";
+    }
+    if (!req.body.bucket) {
+        error += "Bucket name not provided.";
+    }
+    if (!req.body.configkey) {
+        error += "Configuration Key not provided.";
+    }
+    if (error) {
+        return res.jsonp({"error": error});
     }
 
     var scriptName = "/home/ec2-user/bin/" + req.body.script + " " + req.body.bucket + " " + req.body.configkey;
@@ -104,17 +144,17 @@ exports.runsimulation = function (req, res){
             var sjson;
             if (stdout) {
                 console.log('stdout: ' + stdout);
-                sjson = '{ "stdout": ' +JSON.stringify(stdout)+'}';
+                sjson = '{ "stdout": ' + JSON.stringify(stdout) + '}';
             }
             if (stderr) {
                 console.log('stderr: ' + stderr);
-                sjson = '{ "stderr": ' +JSON.stringify(stderr)+'}';
+                sjson = '{ "stderr": ' + JSON.stringify(stderr) + '}';
             }
             if (error !== null) {
                 console.log('exec error: ' + error);
                 sjson = '{ "error_exec": ' + JSON.stringify(error) + '}';
             }
-            return res.jsonp(JSON.parse(sjson)) ;
+            return res.jsonp(JSON.parse(sjson));
         });
     return 'ok';
 };

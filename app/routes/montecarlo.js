@@ -16,7 +16,7 @@ module.exports = function(app) {
         .post(montecarlo.runlocal);
 
     app.route('/montecarlo')
-        .post(montecarlo.runsimulation);
+        .post(montecarlo.runsimulationAsync);
 
     app.route('/run')
         .get(montecarlo.runlocal);
